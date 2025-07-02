@@ -1,0 +1,203 @@
+/* ==============================================
+   CSS - デザインとアニメーション
+   ============================================== */
+
+/* --- 基本設定とフォント --- */
+body {
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    background-color: #030712; /* 基本の背景色 */
+    color: #d1d5db; /* 基本の文字色 */
+    overflow: hidden; /* 背景アニメーションがはみ出ないように */
+}
+
+/* --- 背景アニメーション --- */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* コンテンツの背面に表示 */
+    overflow: hidden;
+    background: #030712;
+}
+
+/* オーロラ風エフェクトの各要素 */
+.aurora {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px); /* ぼかし効果 */
+    opacity: 0.3;
+}
+
+.aurora-1 {
+    width: 50vw;
+    height: 50vw;
+    background: #4f46e5; /* Indigo */
+    top: -25vw;
+    left: -25vw;
+    animation: move-aurora-1 25s infinite alternate ease-in-out;
+}
+
+.aurora-2 {
+    width: 40vw;
+    height: 40vw;
+    background: #7c3aed; /* Violet */
+    bottom: -20vw;
+    right: -20vw;
+    animation: move-aurora-2 20s infinite alternate ease-in-out;
+}
+
+.aurora-3 {
+    width: 30vw;
+    height: 30vw;
+    background: #10b981; /* Emerald */
+    bottom: 10vw;
+    left: 20vw;
+    animation: move-aurora-3 30s infinite alternate ease-in-out;
+}
+
+/* オーロラを動かすキーフレームアニメーション */
+@keyframes move-aurora-1 {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(10vw, 20vh) rotate(30deg); }
+}
+@keyframes move-aurora-2 {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(-15vw, -15vh) rotate(-40deg); }
+}
+@keyframes move-aurora-3 {
+    from { transform: translate(0, 0) rotate(0deg); }
+    to { transform: translate(5vw, -10vh) rotate(20deg); }
+}
+
+
+/* --- カスタムスクロールバー --- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5); /* トラック部分 */
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(75, 85, 99, 0.7); /* つまみ部分 */
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(107, 114, 128, 0.9);
+}
+
+/* --- グラスモーフィズム カードスタイル --- */
+.card {
+    background: rgba(17, 24, 39, 0.6); /* 半透明の背景 (bg-gray-900/60) */
+    backdrop-filter: blur(10px); /* 背景をぼかす */
+    -webkit-backdrop-filter: blur(10px); /* Safari対応 */
+    border: 1px solid rgba(55, 65, 81, 0.7); /* 半透明の境界線 (border-gray-700/70) */
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    animation: card-fade-in 0.5s ease-out forwards;
+    opacity: 0; /* アニメーションのために初期状態は透明 */
+}
+
+/* カードのホバーエフェクト */
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    background: rgba(31, 41, 55, 0.7); /* bg-gray-800/70 */
+    border-color: rgba(79, 70, 229, 0.8); /* border-indigo-600/80 */
+    box-shadow: 0 10px 25px -3px rgba(79, 70, 229, 0.2), 0 4px 10px -2px rgba(79, 70, 229, 0.1);
+}
+
+/* ページ読み込み時のカード表示アニメーション */
+@keyframes card-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* カード表示の遅延設定 (JavaScriptで --i を設定) */
+.grid > .card {
+    animation-delay: calc(var(--i, 0) * 50ms);
+}
+
+
+/* --- 各種パーツのスタイル --- */
+
+/* セクションタイトル */
+.section-title {
+    border-left: 4px solid #6366f1; /* border-indigo-500 */
+    padding-left: 1rem;
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+}
+
+/* ドラッグ＆ドロップのスタイル */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #4f46e5;
+    border-style: dashed;
+}
+.sortable-chosen {
+    cursor: grabbing; /*掴んでいるときカーソル*/
+}
+
+/* お気に入りアイテムの削除ボタン */
+.favorite-item .delete-btn {
+    opacity: 0; /* 通常は非表示 */
+    transform: scale(0.8);
+    transition: all 0.2s ease-in-out;
+}
+.favorite-item:hover .delete-btn {
+    opacity: 1; /* ホバー時に表示 */
+    transform: scale(1);
+}
+
+/* --- お気に入り追加モーダル --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-container {
+    background: rgba(17, 24, 39, 0.8); /* bg-gray-900/80 */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(55, 65, 81, 0.7);
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-container {
+    transform: scale(1);
+}
+.modal-input {
+    background-color: rgba(31, 41, 55, 0.8) !important;
+    border: 1px solid #4b5563 !important;
+    color: white !important;
+    outline: none;
+}
+.modal-input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5) !important;
+}
