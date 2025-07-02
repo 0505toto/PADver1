@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>経理部ポータルサイト</title>
+    <!-- Tailwind CSSの読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (アイコン) の読み込み -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & Noto Sans JP) の読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* カスタムスタイル */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #030712; /* bg-gray-950 */
+            color: #d1d5db; /* text-gray-300 */
+        }
+        /* スクロールバーのスタイル */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; /* bg-gray-900 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; /* bg-gray-700 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; /* bg-gray-600 */
+        }
+        /* カードのホバーエフェクト */
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s;
+            border: 1px solid #374151; /* border-gray-700 */
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2), 0 4px 6px -2px rgba(79, 70, 229, 0.1);
+            background-color: #1f2937; /* bg-gray-800 */
+            border-color: #4f46e5; /* border-indigo-600 */
+        }
+        .section-title {
+            border-left: 4px solid #6366f1; /* border-indigo-500 */
+            padding-left: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-950">
+
+    <div class="flex flex-col lg:flex-row min-h-screen">
+
+        <!-- ===== メインコンテンツ (8割) ===== -->
+        <main class="w-full lg:w-4/5 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+            <!-- ヘッダー -->
+            <header class="mb-8">
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-white">経理ポータル</h1>
+                        <p class="text-gray-400">最終更新日: 2025年7月2日 Ver.1.0</p>
+                    </div>
+                    <a href="https://ini5a.kinjirou-asp.jp/PLNT1701/KinjirouWeb/kinjirou/kwtop/kwtop.aspx?type=20005" target="_blank" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-5 rounded-lg flex items-center gap-2 transition-transform duration-200 hover:scale-105">
+                        <i class="fas fa-user-clock"></i>
+                        <span>勤怠 (勤次郎)</span>
+                    </a>
+                </div>
+
+                <!-- 天気と検索 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                    <!-- 天気予報 (仮) -->
+                    <div id="weather-widget" class="flex items-center gap-4 p-2">
+                         <i class="fas fa-cloud-sun text-cyan-400 text-4xl"></i>
+                         <div>
+                            <p class="font-bold text-lg text-white">大阪の天気</p>
+                            <p class="text-gray-400">晴れのち曇り 32°C / 25°C</p>
+                         </div>
+                    </div>
+                    <!-- Google検索 -->
+                    <form action="https://www.google.com/search" method="get" target="_blank" class="flex items-center w-full">
+                        <input type="text" name="q" placeholder="Googleで検索..." class="w-full bg-gray-800 border border-gray-700 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-white transition">
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-r-lg transition-colors">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <!-- リンクエリア -->
+            <div class="space-y-10">
+                <!-- Section: Schedule -->
+                <section>
+                    <h2 class="section-title text-2xl font-semibold mb-4 text-white"><i class="fas fa-calendar-alt mr-2 text-indigo-400"></i>Schedule</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="https://planteckk.sharepoint.com/sites/msteams_9d310a/SiteAssets/SitePages/Home/%E3%80%90%E7%B5%8C%E7%90%86%E9%83%A8%E3%80%91%E5%B9%B4%E9%96%93%E6%A5%AD%E5%8B%99.xlsx?web=1" target="_blank" class="card bg-gray-900 p-6 rounded-lg flex items-center gap-4">
+                            <i class="fas fa-file-excel text-green-400 text-3xl fa-fw"></i>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">年間業務</h3>
+                                <p class="text-gray-400">年間スケジュールを確認</p>
+                            </div>
+                        </a>
+                        <a href="https://outlook.office.com/calendar/view/month" target="_blank" class="card bg-gray-900 p-6 rounded-lg flex items-center gap-4">
+                            <i class="fas fa-calendar-day text-blue-400 text-3xl fa-fw"></i>
+                            <div>
+                                <h3 class="font-bold text-lg text-white">日常業務</h3>
+                                <p class="text-gray-400">Outlookカレンダー</p>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Section: 経理部門 -->
+                <section>
+                    <h2 class="section-title text-2xl font-semibold mb-4 text-white"><i class="fas fa-calculator mr-2 text-indigo-400"></i>経理部門 業務リンク</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <a href="https://business.getmoneytree.com/landing" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-tree fa-fw text-green-500"></i>Moneytree</a>
+                        <a href="https://plantec-kk.app.bill-one.com/recipient/accounting/invoices" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-file-invoice-dollar fa-fw text-yellow-500"></i>Billone</a>
+                        <a href="https://app.makeleaps.com/home/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-file-signature fa-fw text-blue-500"></i>MakeLeaps</a>
+                        <a href="https://hz6n32v7pq52.cybozu.com/k/#/portal" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-cubes fa-fw text-red-500"></i>Kintone</a>
+                        <a href="https://rsphoto.rakurakuseisan.jp/yCiwuzXNzTa/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-yen-sign fa-fw text-green-400"></i>楽楽精算</a>
+                        <a href="https://hz6n32v7pq52.cybozu.com/k/167/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-address-book fa-fw text-purple-500"></i>経理住所録</a>
+                        <a href="https://0505toto.github.io/NetBankingportal/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-landmark fa-fw text-gray-400"></i>SPCNetBanking</a>
+                        <a href="https://menu.a-saas.jp/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-cloud fa-fw text-sky-400"></i>A-saas</a>
+                    </div>
+                </section>
+
+                <!-- Section: 社内共通 -->
+                <section>
+                    <h2 class="section-title text-2xl font-semibold mb-4 text-white"><i class="fas fa-building mr-2 text-indigo-400"></i>社内共通リンク</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <a href="https://hz6n32v7pq52.cybozu.com/g/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-users fa-fw text-yellow-400"></i>Garoon</a>
+                        <a href="http://pweb/plantec_main/top.php" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-sitemap fa-fw text-gray-500"></i>旧ポータル</a>
+                        <a href="https://plantec.media.ourly.jp/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-newspaper fa-fw text-blue-400"></i>PlantecNews</a>
+                        <a href="https://www.fukuri.jp/fkr/apps/log/AASC10111.cfm?action=login" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-gift fa-fw text-pink-400"></i>RELO CLUB</a>
+                    </div>
+                </section>
+                
+                <!-- Section: AI & Tools -->
+                <section>
+                    <h2 class="section-title text-2xl font-semibold mb-4 text-white"><i class="fas fa-brain mr-2 text-indigo-400"></i>AI & 便利ツール</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <a href="https://chatgpt.com/" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-robot fa-fw text-teal-400"></i>ChatGPT</a>
+                        <a href="https://gemini.google.com/app?hl=ja" target="_blank" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3"><i class="fas fa-star-of-life fa-fw text-purple-400"></i>Gemini</a>
+                        <a href="#" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3 opacity-50 cursor-not-allowed"><i class="fas fa-address-card fa-fw text-gray-500"></i>社員内線一覧表</a>
+                        <a href="#" class="card bg-gray-900 p-4 rounded-lg flex items-center gap-3 opacity-50 cursor-not-allowed"><i class="fas fa-tools fa-fw text-gray-500"></i>便利サイト</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- ===== サイドバー (2割) ===== -->
+        <aside class="w-full lg:w-1/5 bg-gray-900 p-6 flex-shrink-0 border-l border-gray-800">
+            <div class="sticky top-6">
+                <h2 class="text-xl font-bold mb-5 text-white"><i class="fas fa-bolt mr-2 text-yellow-400"></i>Quick Access</h2>
+                
+                <!-- 銀行リンク -->
+                <div class="space-y-3 mb-8">
+                    <h3 class="font-semibold text-gray-400 text-sm tracking-wider uppercase">銀行サイト</h3>
+                    <a href="https://corporate.bk.mufg.jp/frontend/auth" target="_blank" class="card bg-gray-800 p-4 rounded-lg flex items-center gap-3">
+                        <i class="fas fa-university text-red-500 text-xl fa-fw"></i>
+                        <span class="text-white">Main銀行 (MUFG)</span>
+                    </a>
+                    <a href="https://www.b-direct.resonabank.co.jp/0010c/oauth/auth?response_type=code&client_id=OPRS0010&redirect_uri=https://wb.resona-gr.co.jp/webservice/WSOI0102E100M.do&state=OIDCRelateState&nonce=a2dc98c7afe54bba9c52241753b99eba&approvaldiv=2&balance_inquiry_use=0&account_activity_use=0&account_activity_zengin_use=0&transfer_payment_use=0&transfer_payment_zengin_use=0&transfer_request_use=0&comprehensive_transfer_request_use=0&salary_bonus_transfer_request_use=0&account_transfer_1_request_use=0&account_transfer_2_request_use=0&account_transfer_3_request_use=0&account_transfer_4_request_use=0&account_transfer_5_request_use=0&bulk_account_verification_request_use=0&transfer_inquiry_use=0&comprehensive_transfer_inquiry_use=0&salary_bonus_transfer_inquiry_use=0&account_transfer_1_inquiry_use=0&account_transfer_2_inquiry_use=0&account_transfer_3_inquiry_use=0&account_transfer_4_inquiry_use=0&account_transfer_5_inquiry_use=0&bulk_account_verification_inquiry_use=0&transfer_approval_use=0&comprehensive_transfer_approval_use=0&salary_bonus_transfer_approval_use=0&account_transfer_1_approval_use=0&account_transfer_2_approval_use=0&account_transfer_3_approval_use=0&account_transfer_4_approval_use=0&account_transfer_5_approval_use=0&bulk_account_verification_approval_use=0&account_transfer_1_result_use=0&account_transfer_2_result_use=0&account_transfer_3_result_use=0&account_transfer_4_result_use=0&account_transfer_5_result_use=0&account_transfer_1_fee_use=0&account_transfer_2_fee_use=0&account_transfer_3_fee_use=0&account_transfer_4_fee_use=0&account_transfer_5_fee_use=0&openid_use=1&erm_claims_inquiry_use=0&erm_payment_use=0&erm_financings_use=0" target="_blank" class="card bg-gray-800 p-4 rounded-lg flex items-center gap-3">
+                        <i class="fas fa-university text-green-500 text-xl fa-fw"></i>
+                        <span class="text-white">Sub銀行 (りそな)</span>
+                    </a>
+                </div>
+
+                <!-- お気に入り機能 (プレースホルダー) -->
+                <div>
+                    <h3 class="font-semibold text-gray-400 text-sm tracking-wider uppercase mb-3">お気に入り</h3>
+                    <div id="favorites-list" class="space-y-2">
+                        <!-- ここにJavaScriptでお気に入りが追加されます -->
+                        <div class="border-2 border-dashed border-gray-700 p-4 rounded-lg text-center text-gray-500">
+                            <p>よく使うリンクを<br>追加できます</p>
+                        </div>
+                    </div>
+                    <button id="add-favorite-btn" class="w-full mt-4 bg-indigo-600/80 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all duration-200 hover:gap-3">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>お気に入り追加</span>
+                    </button>
+                </div>
+
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- ここにJavaScriptのコードを記述します (次回以降) -->
+    <script>
+        // 次回以降、ここにお気に入り機能や並び替え機能のJavaScriptを記述していきます。
+    </script>
+
+</body>
+</html>
