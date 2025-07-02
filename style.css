@@ -1,321 +1,372 @@
-/* 基本設定とフォントのインポート */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+/**
+ * 経理ポータルサイト用 CSS
+ *
+ * デザインコンセプト:
+ * - モダンでクリーンなデザイン
+ * - スムーズなアニメーションとトランジション
+ * - 直感的な操作性 (ドラッグ&ドロップなど)
+ * - レスポンシブ対応
+ */
 
+/* === 基本設定と変数 === */
 :root {
-    --bg-color: #1a1a2e; /* 深い夜空のような紺色 */
-    --primary-color: #16213e; /* やや明るい紺色 */
-    --secondary-color: #0f3460; /* カードの背景色 */
-    --accent-color: #e94560; /* アクセントの赤色 */
-    --font-color: #dcdcdc; /* 基本の文字色 */
-    --glow-color: rgba(74, 222, 128, 0.7); /* ホバー時の光る色 (緑) */
-    --glass-bg: rgba(255, 255, 255, 0.05); /* グラスモーフィズムの背景 */
-    --border-color: rgba(255, 255, 255, 0.1);
+    --bg-color: #f4f7fc;
+    --header-bg: #ffffff;
+    --sidebar-bg: #e9eef6;
+    --card-bg: #ffffff;
+    --primary-text-color: #333;
+    --secondary-text-color: #667;
+    --accent-color: #4a90e2;
+    --accent-hover-color: #357abd;
+    --border-color: #dfe6f0;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --excel-color: #1D6F42;
+    --outlook-color: #0072C6;
+
+    --font-family-main: 'Noto Sans JP', 'Roboto', sans-serif;
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
 }
 
-/* 全体的なスタイルリセットと基本設定 */
+/* === グローバルスタイル === */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    font-family: var(--font-family-main);
     background-color: var(--bg-color);
-    color: var(--font-color);
+    color: var(--primary-text-color);
     line-height: 1.6;
-    overflow-x: hidden; /* 横スクロールを禁止 */
 }
 
 a {
-    color: var(--font-color);
     text-decoration: none;
+    color: inherit;
 }
 
-/* ヘッダー */
-.portal-header {
+h1, h2, h3 {
+    font-weight: 700;
+}
+
+/* === ヘッダー === */
+.site-header {
+    background-color: var(--header-bg);
     padding: 1rem 2rem;
-    background: var(--primary-color);
-    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 10px var(--shadow-color);
     position: sticky;
     top: 0;
     z-index: 1000;
-    backdrop-filter: blur(10px);
-    background-color: rgba(22, 33, 62, 0.8);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.site-header.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.header-top-row {
+.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.8rem;
-    color: #a0a0a0;
-    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 }
 
-.header-main-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-/* Google検索フォーム */
-.google-search-form {
-    display: flex;
-    align-items: center;
-    background: var(--glass-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 50px;
-    padding: 0.5rem;
-    flex-grow: 1;
-    max-width: 600px;
-    transition: all 0.3s ease;
-}
-
-.google-search-form:focus-within {
-    box-shadow: 0 0 15px var(--glow-color);
-    border-color: var(--glow-color);
-}
-
-.google-search-form .fa-google {
-    font-size: 1.5rem;
-    color: #4285F4;
-    margin: 0 0.8rem;
-}
-
-.google-search-form input {
-    flex-grow: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--font-color);
-    font-size: 1rem;
-}
-
-.google-search-form button {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 0.6rem 1.5rem;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.google-search-form button:hover {
-    background-color: #ff637d;
-}
-
-/* ヘッダーの勤怠ボタン */
-.header-link-button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 1.2rem;
-    background: var(--secondary-color);
-    border-radius: 10px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    border: 1px solid var(--border-color);
-}
-
-.header-link-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    background-color: var(--accent-color);
-}
-
-/* メインコンテナのレイアウト */
-.portal-container {
-    display: flex;
-    padding: 2rem;
-    gap: 2rem;
-    /* アニメーション：読み込み時にふわっと表示 */
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-.main-content {
-    flex: 8; /* 8割の幅 */
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.quick-access {
-    flex: 2; /* 2割の幅 */
-    background: var(--glass-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    padding: 1.5rem;
-    height: fit-content; /* 中身の高さに合わせる */
-    position: sticky;
-    top: 120px; /* ヘッダーの高さに応じて調整 */
-}
-
-/* カテゴリタイトル */
-.link-category h2 {
+.logo-area .site-title {
     font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    padding-left: 1rem;
-    border-left: 4px solid var(--accent-color);
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    color: var(--primary-text-color);
+}
+.logo-area .update-info {
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
 }
 
-/* リンクカードのグリッド */
-.link-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.header-widgets {
+    display: flex;
+    align-items: center;
     gap: 1.5rem;
 }
 
-/* リンクカードのスタイル */
-.link-card {
-    background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
-    border-radius: 15px;
-    padding: 1.5rem;
-    text-align: center;
+.google-search-form {
+    display: flex;
+    align-items: center;
     border: 1px solid var(--border-color);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    position: relative;
+    border-radius: 20px;
     overflow: hidden;
-    cursor: grab;
+}
+.google-search-form input {
+    border: none;
+    padding: 0.5rem 1rem;
+    outline: none;
+    background: transparent;
+}
+.google-search-form button {
+    background-color: var(--accent-color);
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+.google-search-form button:hover {
+    background-color: var(--accent-hover-color);
 }
 
-.link-card:active {
-    cursor: grabbing;
+.weather-widget {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+.weather-widget.loaded, .weather-widget.error {
+    opacity: 1;
 }
 
-.link-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, var(--glow-color), transparent);
-    transition: left 0.6s ease;
+.header-button {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all var(--transition-speed) ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.header-button:hover {
+    background-color: var(--accent-hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.link-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 0 25px var(--glow-color);
-    border-color: var(--glow-color);
+/* === メインレイアウト === */
+.main-container {
+    display: flex;
+    padding: 2rem;
+    gap: 2rem;
+}
+.main-content {
+    flex: 8; /* 8割 */
+}
+.quick-links {
+    flex: 2; /* 2割 */
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+}
+.quick-links.visible {
+    opacity: 1;
+    transform: translateX(0);
 }
 
-.link-card:hover::before {
-    left: 100%;
+/* === リンクセクション === */
+.link-section {
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+.link-section.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.link-card i {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    display: block;
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--accent-color);
+    display: inline-block;
+}
+.section-title i {
+    margin-right: 0.75rem;
     color: var(--accent-color);
 }
-.link-card .icon-excel { color: #217346; }
-.link-card .icon-outlook { color: #0078D4; }
 
-
-.link-card span {
-    font-weight: bold;
-    font-size: 1rem;
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
-.link-card.disabled {
+.link-items {
+    display: contents; /* grid-containerの直接の子要素として振る舞わせる */
+}
+
+.link-item {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    transition: all var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: grab;
+}
+.link-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+.link-item.dragging {
     opacity: 0.5;
+    border: 2px dashed var(--accent-color);
+}
+.link-item.is-disabled {
+    opacity: 0.6;
     cursor: not-allowed;
-    background: #333;
+    background-color: #f9f9f9;
 }
-.link-card.disabled:hover {
+.link-item.is-disabled:hover {
     transform: none;
-    box-shadow: none;
-    border-color: var(--border-color);
+    box-shadow: 0 4px 15px var(--shadow-color);
 }
 
-/* クイックアクセス（お気に入り）エリア */
-.quick-access h3 {
+.link-item i.fas {
+    font-size: 2rem;
+    color: var(--accent-color);
+    width: 40px;
     text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+}
+.link-item i.icon-excel { color: var(--excel-color); }
+.link-item i.icon-outlook { color: var(--outlook-color); }
+
+.link-item h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+.link-item p {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color);
 }
 
-.favorites-list {
-    min-height: 300px;
-    border: 2px dashed var(--border-color);
-    border-radius: 10px;
+/* === サイドバー (お気に入り) === */
+.quick-links {
+    background-color: var(--sidebar-bg);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    align-self: flex-start; /* 上に固定 */
+    position: sticky;
+    top: 100px; /* ヘッダーの高さに応じて調整 */
+}
+
+.favorites-container {
+    margin-top: 1.5rem;
     padding: 1rem;
-    transition: all 0.3s ease;
+    border: 2px dashed var(--border-color);
+    border-radius: var(--border-radius);
+    min-height: 200px;
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+}
+.favorites-container.drag-over {
+    background-color: #dbe6f5;
+    border-color: var(--accent-color);
 }
 
-/* ドラッグ中のスタイル */
-.favorites-list.drag-over {
-    background-color: var(--glow-color);
-    border-color: white;
-    box-shadow: 0 0 20px var(--glow-color);
-}
-
-.favorites-list .placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: 250px;
-    color: #666;
+.favorites-guide {
+    color: var(--secondary-text-color);
     text-align: center;
+    font-size: 0.9rem;
+    padding: 2rem 0;
 }
 
-.favorites-list .link-card {
+.favorite-item {
+    cursor: default;
+    position: relative;
     margin-bottom: 1rem;
+    animation: fadeIn 0.5s ease;
+}
+.favorite-item.removing {
+    transition: opacity 0.3s, transform 0.3s;
+    opacity: 0;
+    transform: scale(0.8);
 }
 
+.remove-favorite-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0,0,0,0.4);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity var(--transition-speed);
+}
+.favorite-item:hover .remove-favorite-btn {
+    opacity: 1;
+}
+.remove-favorite-btn:hover {
+    background: var(--error-color);
+}
 
-/* アニメーション定義 */
+.clear-button {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+.clear-button:hover {
+    background-color: #c82333;
+}
+
+/* === フッター === */
+.site-footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 2rem;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+}
+
+/* === アニメーション === */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
 }
 
-/* レスポンシブ対応 */
-@media (max-width: 1024px) {
-    .portal-container {
+/* === レスポンシブ対応 === */
+@media (max-width: 1200px) {
+    .main-container {
         flex-direction: column;
     }
-    .quick-access {
-        position: static; /* 固定を解除 */
+    .quick-links {
+        position: static; /* スティッキー解除 */
         width: 100%;
-    }
-    .header-main-row {
-        flex-direction: column;
-        align-items: stretch;
     }
 }
 
 @media (max-width: 768px) {
-    .portal-header {
-        padding: 1rem;
-    }
-    .portal-container {
-        padding: 1rem;
-    }
-    .link-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    .header-top {
+        flex-direction: column;
         gap: 1rem;
     }
-    .link-card {
+    .header-widgets {
+        flex-direction: column;
+        width: 100%;
+    }
+    .main-container {
         padding: 1rem;
+    }
+    .grid-container {
+        grid-template-columns: 1fr; /* 1カラムに */
     }
 }
