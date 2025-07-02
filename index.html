@@ -12,40 +12,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* カスタムスタイル */
-        body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background-color: #f8f9fa; /* 少し明るい背景色 */
-        }
-        .card {
-            /* カードの基本スタイル */
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: all 0.3s ease-in-out;
-        }
-        .card:hover {
-            /* カードホバー時のアニメーション */
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-        .link-item {
-            /* リンクアイテムのスタイル */
-            transition: background-color 0.2s ease-in-out;
-        }
-        .link-item:hover {
-            /* リンクホバー時の背景色 */
-            background-color: #f1f5f9;
-        }
-        /* ドラッグ中のスタイル（JSで付与） */
-        .dragging {
-            opacity: 0.5;
-        }
-        .drag-over {
-            border: 2px dashed #3b82f6; /* 青い破線 */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-50">
 
