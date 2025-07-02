@@ -1,184 +1,60 @@
-/**
- * 経理ポータルサイト機能
- * 2025-07-02 Ver.1
- *
- * 機能一覧:
- * 1. 大阪の天気予報をAPIで取得して表示
- * 2. リンクアイテムのドラッグ＆ドロップによる並び替え
- * 3. よく使うリンクをお気に入りエリア（Quickエリア）に追加
- * 4. お気に入りアイテムの削除
- * 5. 全ての変更（並び順、お気に入り）をブラウザのLocalStorageに保存・復元
- */
-
-// DOMの読み込みが完了したら、すべての処理を開始します。
+// DOMが読み込まれたら処理を開始
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ===== グローバル変数とDOM要素の取得 =====
-    const weatherWidget = document.getElementById('weather-widget');
+    // --- DOM要素の取得 ---
+    const containers = document.querySelectorAll('.card-grid, .card-grid-small');
+    const favoriteModal = document.getElementById('favorite-modal');
+    const addFavoriteBtn = document.getElementById('add-favorite-btn');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const favoriteForm = document.getElementById('favorite-form');
     const favoritesList = document.getElementById('favorites-list');
-    const favoritesDropzone = document.getElementById('favorites-dropzone');
-    const favoritesPlaceholder = document.getElementById('favorites-placeholder');
-    // ドラッグ＆ドロップが可能なすべてのリスト（セクションのリスト + お気に入りリスト）
-    const dropzones = document.querySelectorAll('.card ul, #favorites-list');
-    let draggedItem = null; // ドラッグ中の要素を保持する変数
 
-    // ===== 初期化処理 =====
+    // --- ドラッグ＆ドロップ機能 ---
+    let draggingItem = null; // ドラッグ中の要素を保持する変数
 
-    /**
-     * 天気予報を初期化する関数
-     */
-    const initWeather = async () => {
-        // Open-Meteo APIを使用して大阪の天気情報を取得 (APIキー不要)
-        const lat = 34.69; // 大阪の緯度
-        const lon = 135.50; // 大阪の経度
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('天気の取得に失敗しました。');
-            
-            const data = await response.json();
-            const weather = data.current_weather;
-            const temp = weather.temperature;
-            const weatherCode = weather.weathercode;
-
-            // 天気コードに対応するアイコンと日本語テキストを取得
-            const { icon, text } = getWeatherInfo(weatherCode);
-
-            // HTMLを更新
-            weatherWidget.innerHTML = `
-                <i class="fas ${icon} mr-2 text-lg"></i>
-                <span>大阪の天気: ${text}, ${temp}°C</span>
-            `;
-        } catch (error) {
-            console.error(error);
-            weatherWidget.innerHTML = `
-                <i class="fas fa-exclamation-circle mr-2 text-red-500"></i>
-                <span>天気情報の取得に失敗</span>
-            `;
-        }
-    };
-
-    /**
-     * 天気コードからアイコンクラスと日本語テキストを返すヘルパー関数
-     * @param {number} code - Open-Meteoの天気コード
-     * @returns {{icon: string, text: string}}
-     */
-    const getWeatherInfo = (code) => {
-        const weatherMap = {
-            0: { icon: 'fa-sun text-yellow-500', text: '快晴' },
-            1: { icon: 'fa-cloud-sun text-yellow-500', text: '晴れ' },
-            2: { icon: 'fa-cloud text-gray-400', text: '一部曇り' },
-            3: { icon: 'fa-cloud text-gray-500', text: '曇り' },
-            45: { icon: 'fa-smog text-gray-400', text: '霧' },
-            48: { icon: 'fa-smog text-gray-400', text: '霧氷' },
-            51: { icon: 'fa-cloud-rain text-blue-400', text: '霧雨' },
-            53: { icon: 'fa-cloud-rain text-blue-400', text: '霧雨' },
-            55: { icon: 'fa-cloud-rain text-blue-400', text: '霧雨' },
-            61: { icon: 'fa-cloud-showers-heavy text-blue-500', text: '雨' },
-            63: { icon: 'fa-cloud-showers-heavy text-blue-500', text: '雨' },
-            65: { icon: 'fa-cloud-showers-heavy text-blue-600', text: '強い雨' },
-            80: { icon: 'fa-cloud-showers-heavy text-blue-500', text: 'にわか雨' },
-            81: { icon: 'fa-cloud-showers-heavy text-blue-500', text: 'にわか雨' },
-            82: { icon: 'fa-cloud-showers-heavy text-blue-600', text: '激しいにわか雨' },
-            95: { icon: 'fa-bolt text-yellow-400', text: '雷雨' },
-        };
-        return weatherMap[code] || { icon: 'fa-question-circle', text: '不明' };
-    };
-
-    /**
-     * ドラッグ＆ドロップ機能を初期化する関数
-     */
-    const initDragAndDrop = () => {
-        // すべてのドラッグ可能なアイテムにイベントリスナーを設定
-        document.querySelectorAll('[draggable="true"]').forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragend', handleDragEnd);
-        });
-
-        // すべてのドロップ可能なゾーンにイベントリスナーを設定
-        dropzones.forEach(zone => {
-            zone.addEventListener('dragover', handleDragOver);
-            zone.addEventListener('dragleave', handleDragLeave);
-            zone.addEventListener('drop', handleDrop);
-        });
-    };
-    
-    // ===== ドラッグ＆ドロップのイベントハンドラ =====
-
-    function handleDragStart(e) {
-        // ドラッグする要素はリンク(a)だが、操作対象はリスト項目(li)なので親要素を取得
-        draggedItem = e.target.closest('li'); 
-        if (!draggedItem) return;
-        // ドラッグ中の見た目を変更
-        setTimeout(() => draggedItem.classList.add('dragging'), 0);
-        // データの転送設定（ここでは使わないが作法として）
-        e.dataTransfer.effectAllowed = 'move';
-    }
-
-    function handleDragEnd() {
-        if (!draggedItem) return;
-        // ドラッグ中の見た目を元に戻す
-        draggedItem.classList.remove('dragging');
-        draggedItem = null;
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault(); // ドロップを許可するために必須
-        const dropzone = e.target.closest('ul');
-        if (dropzone) {
-            dropzone.classList.add('drag-over');
-        }
-    }
-
-    function handleDragLeave(e) {
-        const dropzone = e.target.closest('ul');
-        if (dropzone) {
-            dropzone.classList.remove('drag-over');
-        }
-    }
-
-    function handleDrop(e) {
-        e.preventDefault();
-        if (!draggedItem) return;
-
-        const dropzoneList = e.target.closest('ul');
-        if (!dropzoneList) return;
-
-        dropzoneList.classList.remove('drag-over');
-
-        // お気に入りエリアへのドロップ処理
-        if (dropzoneList.id === 'favorites-list') {
-            // 同じリンクがすでにお気に入りにないかチェック
-            const linkHref = draggedItem.querySelector('a').href;
-            const isAlreadyFavorite = [...favoritesList.querySelectorAll('a')].some(a => a.href === linkHref);
-            
-            if (!isAlreadyFavorite) {
-                addFavorite(draggedItem);
+    // すべてのコンテナ（カードが入っているエリア）を対象にする
+    containers.forEach(container => {
+        // ドラッグが開始された時の処理
+        container.addEventListener('dragstart', (e) => {
+            // aタグやdivタグなど、カードの要素のみを対象にする
+            if (e.target.classList.contains('card')) {
+                draggingItem = e.target;
+                // ドラッグ中の要素にスタイルを適用（半透明にするなど）
+                setTimeout(() => e.target.classList.add('dragging'), 0);
             }
-        } 
-        // 同じリスト内での並び替え処理
-        else {
-            const afterElement = getDragAfterElement(dropzoneList, e.clientY);
+        });
+
+        // ドラッグが終わった時の処理
+        container.addEventListener('dragend', (e) => {
+            if (draggingItem) {
+                // スタイルを元に戻す
+                draggingItem.classList.remove('dragging');
+                draggingItem = null;
+                // お気に入りの順番が変わった可能性があるので保存する
+                saveFavorites();
+            }
+        });
+
+        // ドラッグ中の要素が他の要素の上に来た時の処理
+        container.addEventListener('dragover', (e) => {
+            e.preventDefault(); // デフォルトの動作をキャンセルしてドロップを許可
+            const afterElement = getDragAfterElement(container, e.clientY);
             if (afterElement == null) {
-                dropzoneList.appendChild(draggedItem);
+                container.appendChild(draggingItem);
             } else {
-                dropzoneList.insertBefore(draggedItem, afterElement);
+                container.insertBefore(draggingItem, afterElement);
             }
-        }
-        
-        // 変更を保存
-        saveState();
-    }
+        });
+    });
 
     /**
-     * ドロップ位置の直後にある要素を取得する関数
-     * @param {HTMLElement} container - ドロップ先のリスト
+     * マウスカーソルのY座標に基づいて、ドラッグ中の要素をどこに挿入すべきかを判断する関数
+     * @param {HTMLElement} container - カードのコンテナ要素
      * @param {number} y - マウスのY座標
-     * @returns {HTMLElement|null}
+     * @returns {HTMLElement} - 挿入位置の基準となる要素
      */
     function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('li:not(.dragging)')];
+        const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
 
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
@@ -191,154 +67,122 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    // ===== お気に入り機能の関数 =====
+
+    // --- お気に入り機能 ---
+
+    // 1. モーダルの表示・非表示
+    addFavoriteBtn.addEventListener('click', () => favoriteModal.style.display = 'block');
+    closeModalBtn.addEventListener('click', () => favoriteModal.style.display = 'none');
+    window.addEventListener('click', (e) => {
+        if (e.target === favoriteModal) {
+            favoriteModal.style.display = 'none';
+        }
+    });
+
+    // 2. お気に入りの追加処理
+    favoriteForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // フォームのデフォルト送信をキャンセル
+        const name = document.getElementById('favorite-name').value;
+        const url = document.getElementById('favorite-url').value;
+
+        addFavorite(name, url); // 新しいお気に入りを追加
+
+        favoriteForm.reset(); // フォームをリセット
+        favoriteModal.style.display = 'none'; // モーダルを閉じる
+    });
 
     /**
-     * お気に入りを追加する関数
-     * @param {HTMLElement} originalItem - 元のリスト項目(li)
+     * 新しいお気に入りデータを現在のリストに追加して保存する
+     * @param {string} name - サイト名
+     * @param {string} url - サイトURL
      */
-    function addFavorite(originalItem) {
-        const linkElement = originalItem.querySelector('a').cloneNode(true); // aタグをディープコピー
-        const newItem = document.createElement('li');
-        newItem.className = 'link-item flex justify-between items-center p-2 rounded-md bg-white';
-        newItem.setAttribute('draggable', 'true');
-
-        const removeBtn = document.createElement('i');
-        removeBtn.className = 'fas fa-trash-alt text-gray-400 hover:text-red-500 cursor-pointer transition-colors';
-        removeBtn.addEventListener('click', removeFavorite);
-
-        newItem.appendChild(linkElement);
-        newItem.appendChild(removeBtn);
-        
-        // 新しいお気に入りアイテムにもD&Dイベントを追加
-        newItem.addEventListener('dragstart', handleDragStart);
-        newItem.addEventListener('dragend', handleDragEnd);
-
-        favoritesList.appendChild(newItem);
-        updateFavoritesPlaceholder();
+    function addFavorite(name, url) {
+        const favorites = getFavoritesFromDOM();
+        favorites.push({ name, url });
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        renderFavorites(); // 再描画
     }
 
-    /**
-     * お気に入りを削除する関数
-     * @param {Event} e - クリックイベント
-     */
-    function removeFavorite(e) {
-        e.preventDefault(); // リンクへ飛んでしまうのを防ぐ
-        e.stopPropagation(); // イベントの伝播を防ぐ
-        
-        const itemToRemove = e.target.closest('li');
-        itemToRemove.remove();
-        updateFavoritesPlaceholder();
-        saveState(); // 変更を保存
-    }
+    // 3. お気に入りの削除処理 (イベント委任)
+    favoritesList.addEventListener('click', (e) => {
+        // クリックされたのが削除ボタンの場合のみ処理
+        if (e.target.classList.contains('delete-btn')) {
+            e.preventDefault(); // aタグのリンク遷移を防止
+            e.stopPropagation(); // 親要素へのイベント伝播を停止
+
+            // 削除ボタンの親要素であるカードを削除
+            const cardToRemove = e.target.closest('.card');
+            cardToRemove.remove();
+            
+            saveFavorites(); // 変更を保存
+        }
+    });
+
+    // 4. お気に入りの永続化 (LocalStorage)
     
     /**
-     * お気に入りエリアのプレースホルダー表示を更新する関数
+     * 現在のお気に入りリストの状態（DOM）をLocalStorageに保存する
      */
-    function updateFavoritesPlaceholder() {
-        if (favoritesList.children.length === 0) {
-            favoritesPlaceholder.style.display = 'block';
-        } else {
-            favoritesPlaceholder.style.display = 'none';
-        }
+    function saveFavorites() {
+        const favorites = getFavoritesFromDOM();
+        localStorage.setItem('favorites', JSON.stringify(favorites));
     }
 
-
-    // ===== 状態の保存と復元 (LocalStorage) =====
-
     /**
-     * 現在のレイアウトとお気に入りをLocalStorageに保存する関数
+     * DOMから現在のお気に入り情報を読み取って配列で返す
+     * @returns {Array<Object>}
      */
-    function saveState() {
-        // お気に入りの保存
+    function getFavoritesFromDOM() {
+        const favoriteCards = favoritesList.querySelectorAll('.card');
         const favorites = [];
-        favoritesList.querySelectorAll('li').forEach(item => {
-            const link = item.querySelector('a');
-            favorites.push({
-                href: link.href,
-                html: link.innerHTML // アイコンも含めて保存
-            });
+        favoriteCards.forEach(card => {
+            const link = card; // card自体がaタグ
+            const name = card.querySelector('h4').textContent;
+            favorites.push({ name, url: link.href });
         });
-        localStorage.setItem('portal_favorites', JSON.stringify(favorites));
+        return favorites;
+    }
 
-        // 各セクションの並び順の保存
-        document.querySelectorAll('main .card').forEach(section => {
-            const sectionId = section.id;
-            if (!sectionId) return;
+    /**
+     * LocalStorageからお気に入りを読み込み、画面に描画する
+     */
+    function renderFavorites() {
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        favoritesList.innerHTML = ''; // 一旦リストを空にする
 
-            const linksOrder = [];
-            section.querySelectorAll('li').forEach(item => {
-                const link = item.querySelector('a');
-                linksOrder.push({
-                    href: link.href,
-                    html: link.innerHTML
-                });
-            });
-            localStorage.setItem(`portal_layout_${sectionId}`, JSON.stringify(linksOrder));
+        favorites.forEach(fav => {
+            const card = createFavoriteCard(fav.name, fav.url);
+            favoritesList.appendChild(card);
         });
     }
 
     /**
-     * LocalStorageから状態を復元する関数
+     * お気に入りカードのHTML要素を生成する
+     * @param {string} name - サイト名
+     * @param {string} url - サイトURL
+     * @returns {HTMLElement} - 生成されたカード要素
      */
-    function loadState() {
-        // お気に入りの復元
-        const savedFavorites = JSON.parse(localStorage.getItem('portal_favorites'));
-        if (savedFavorites) {
-            favoritesList.innerHTML = ''; // 一旦クリア
-            savedFavorites.forEach(fav => {
-                const originalLink = findOriginalLink(fav.href);
-                if (originalLink) {
-                    addFavorite(originalLink.closest('li'));
-                }
-            });
-        }
-        updateFavoritesPlaceholder();
+    function createFavoriteCard(name, url) {
+        // aタグとしてカードを作成
+        const card = document.createElement('a');
+        card.href = url;
+        card.className = 'card';
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.draggable = true; // ドラッグ可能にする
 
-        // 各セクションの並び順の復元
-        document.querySelectorAll('main .card').forEach(section => {
-            const sectionId = section.id;
-            if (!sectionId) return;
-
-            const savedOrder = JSON.parse(localStorage.getItem(`portal_layout_${sectionId}`));
-            if (savedOrder) {
-                const list = section.querySelector('ul');
-                if (list) {
-                    list.innerHTML = ''; // リストをクリア
-                    savedOrder.forEach(linkInfo => {
-                        const li = document.createElement('li');
-                        const a = document.createElement('a');
-                        a.href = linkInfo.href;
-                        a.innerHTML = linkInfo.html;
-                        // 元のHTMLからクラスと属性を復元
-                        const originalLink = findOriginalLink(linkInfo.href);
-                        if(originalLink) {
-                            a.className = originalLink.className;
-                            a.target = originalLink.target;
-                            a.rel = originalLink.rel;
-                        }
-                        li.appendChild(a);
-                        li.setAttribute('draggable', 'true');
-                        li.addEventListener('dragstart', handleDragStart);
-                        li.addEventListener('dragend', handleDragEnd);
-                        list.appendChild(li);
-                    });
-                }
-            }
-        });
-    }
-    
-    /**
-     * hrefを元に元のa要素を探すヘルパー関数
-     * @param {string} href 
-     * @returns {HTMLElement|null}
-     */
-    function findOriginalLink(href) {
-        return document.querySelector(`main a[href="${href}"]`);
+        // カードの中身
+        card.innerHTML = `
+            <i class="fa-solid fa-star card-icon-small"></i>
+            <h4>${name}</h4>
+            <button class="delete-btn" title="お気に入りから削除">×</button>
+        `;
+        return card;
     }
 
-    // ===== アプリケーションの実行 =====
-    initWeather();
-    loadState(); // 保存された状態を読み込む
-    initDragAndDrop(); // D&D機能を初期化
+
+    // --- 初期化処理 ---
+    // ページ読み込み時にLocalStorageからお気に入りを復元
+    renderFavorites();
+
 });
