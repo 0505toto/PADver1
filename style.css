@@ -1,372 +1,140 @@
 /**
- * 経理ポータルサイト用 CSS
+ * 経理ポータルサイト スタイルシート
+ * 2025-07-02 Ver.1
  *
- * デザインコンセプト:
- * - モダンでクリーンなデザイン
- * - スムーズなアニメーションとトランジション
- * - 直感的な操作性 (ドラッグ&ドロップなど)
- * - レスポンシブ対応
+ * Tailwind CSSをベースに、より詳細なデザインと
+ * アニメーションを定義します。
  */
 
-/* === 基本設定と変数 === */
-:root {
-    --bg-color: #f4f7fc;
-    --header-bg: #ffffff;
-    --sidebar-bg: #e9eef6;
-    --card-bg: #ffffff;
-    --primary-text-color: #333;
-    --secondary-text-color: #667;
-    --accent-color: #4a90e2;
-    --accent-hover-color: #357abd;
-    --border-color: #dfe6f0;
-    --shadow-color: rgba(0, 0, 0, 0.08);
-    --success-color: #28a745;
-    --error-color: #dc3545;
-    --excel-color: #1D6F42;
-    --outlook-color: #0072C6;
-
-    --font-family-main: 'Noto Sans JP', 'Roboto', sans-serif;
-    --border-radius: 12px;
-    --transition-speed: 0.3s;
-}
-
-/* === グローバルスタイル === */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+/* ===== 基本設定とフォント ===== */
 body {
-    font-family: var(--font-family-main);
-    background-color: var(--bg-color);
-    color: var(--primary-text-color);
-    line-height: 1.6;
+    font-family: 'Inter', 'Noto Sans JP', sans-serif;
+    background-color: #f4f7f6; /* 少し緑がかったクールな背景色 */
+    background-image: 
+        radial-gradient(circle at 100% 0, rgba(200, 220, 255, 0.3), transparent 40%),
+        radial-gradient(circle at 0 100%, rgba(200, 255, 220, 0.3), transparent 40%);
+    background-attachment: fixed;
+    color: #333;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
+/* ===== ヘッダー ===== */
+header {
+    backdrop-filter: blur(10px); /* すりガラス効果 */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #e5e7eb;
 }
 
-h1, h2, h3 {
-    font-weight: 700;
+/* ===== カードのスタイルとアニメーション ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* === ヘッダー === */
-.site-header {
-    background-color: var(--header-bg);
-    padding: 1rem 2rem;
-    box-shadow: 0 2px 10px var(--shadow-color);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.site-header.visible {
-    opacity: 1;
-    transform: translateY(0);
+.card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 16px; /* 角をより丸く */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* 読み込み時のアニメーション */
+    animation: fadeInUp 0.5s ease-out forwards;
 }
 
-.header-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
-.logo-area .site-title {
-    font-size: 1.8rem;
-    color: var(--primary-text-color);
-}
-.logo-area .update-info {
-    font-size: 0.8rem;
-    color: var(--secondary-text-color);
-}
-
-.header-widgets {
+.card h2 {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-}
-
-.google-search-form {
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    overflow: hidden;
-}
-.google-search-form input {
-    border: none;
-    padding: 0.5rem 1rem;
-    outline: none;
-    background: transparent;
-}
-.google-search-form button {
-    background-color: var(--accent-color);
-    border: none;
-    color: white;
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: background-color var(--transition-speed);
-}
-.google-search-form button:hover {
-    background-color: var(--accent-hover-color);
-}
-
-.weather-widget {
-    font-size: 0.9rem;
-    color: var(--secondary-text-color);
-    opacity: 0;
-    transition: opacity var(--transition-speed);
-}
-.weather-widget.loaded, .weather-widget.error {
-    opacity: 1;
-}
-
-.header-button {
-    background-color: var(--accent-color);
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border-radius: 20px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all var(--transition-speed) ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.header-button:hover {
-    background-color: var(--accent-hover-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-/* === メインレイアウト === */
-.main-container {
-    display: flex;
-    padding: 2rem;
-    gap: 2rem;
-}
-.main-content {
-    flex: 8; /* 8割 */
-}
-.quick-links {
-    flex: 2; /* 2割 */
-    opacity: 0;
-    transform: translateX(20px);
-    transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
-}
-.quick-links.visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-/* === リンクセクション === */
-.link-section {
-    margin-bottom: 2.5rem;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-.link-section.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.section-title {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 3px solid var(--accent-color);
-    display: inline-block;
-}
-.section-title i {
-    margin-right: 0.75rem;
-    color: var(--accent-color);
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.link-items {
-    display: contents; /* grid-containerの直接の子要素として振る舞わせる */
-}
-
-.link-item {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 4px 15px var(--shadow-color);
-    transition: all var(--transition-speed) ease;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    cursor: grab;
-}
-.link-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-}
-.link-item.dragging {
-    opacity: 0.5;
-    border: 2px dashed var(--accent-color);
-}
-.link-item.is-disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: #f9f9f9;
-}
-.link-item.is-disabled:hover {
-    transform: none;
-    box-shadow: 0 4px 15px var(--shadow-color);
-}
-
-.link-item i.fas {
-    font-size: 2rem;
-    color: var(--accent-color);
-    width: 40px;
-    text-align: center;
-}
-.link-item i.icon-excel { color: var(--excel-color); }
-.link-item i.icon-outlook { color: var(--outlook-color); }
-
-.link-item h3 {
-    font-size: 1.1rem;
-    margin-bottom: 0.25rem;
-}
-.link-item p {
-    font-size: 0.85rem;
-    color: var(--secondary-text-color);
-}
-
-/* === サイドバー (お気に入り) === */
-.quick-links {
-    background-color: var(--sidebar-bg);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    align-self: flex-start; /* 上に固定 */
-    position: sticky;
-    top: 100px; /* ヘッダーの高さに応じて調整 */
-}
-
-.favorites-container {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border: 2px dashed var(--border-color);
-    border-radius: var(--border-radius);
-    min-height: 200px;
-    transition: background-color var(--transition-speed), border-color var(--transition-speed);
-}
-.favorites-container.drag-over {
-    background-color: #dbe6f5;
-    border-color: var(--accent-color);
-}
-
-.favorites-guide {
-    color: var(--secondary-text-color);
-    text-align: center;
-    font-size: 0.9rem;
-    padding: 2rem 0;
-}
-
-.favorite-item {
-    cursor: default;
-    position: relative;
+    font-size: 1.125rem; /* 少し小さく */
+    font-weight: 600;
+    color: #1f2937;
+    border-bottom: 2px solid;
+    padding-bottom: 0.75rem;
     margin-bottom: 1rem;
-    animation: fadeIn 0.5s ease;
-}
-.favorite-item.removing {
-    transition: opacity 0.3s, transform 0.3s;
-    opacity: 0;
-    transform: scale(0.8);
 }
 
-.remove-favorite-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(0,0,0,0.4);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity var(--transition-speed);
-}
-.favorite-item:hover .remove-favorite-btn {
-    opacity: 1;
-}
-.remove-favorite-btn:hover {
-    background: var(--error-color);
+/* 各セクションの見出しの色分け */
+#schedule-links h2 { border-color: #3b82f6; } /* 青 */
+#internal-links h2 { border-color: #22c55e; } /* 緑 */
+#accounting-links h2 { border-color: #8b5cf6; } /* 紫 */
+#bank-links h2 { border-color: #4f46e5; } /* 藍 */
+#ai-chat-links h2 { border-color: #14b8a6; } /* ティール */
+#other-links h2 { border-color: #f97316; } /* オレンジ */
+#quick-area h2 { border-color: #facc15; } /* 黄 */
+
+
+/* ===== リンクアイテム ===== */
+.link-item,
+.card ul li {
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.clear-button {
-    width: 100%;
-    margin-top: 1rem;
-    padding: 0.8rem;
-    background-color: var(--error-color);
-    color: white;
-    border: none;
+.card ul li a:hover {
+    background-color: #f0f4ff; /* ホバー時の背景色 */
+    transform: translateX(4px);
+}
+
+/* Quickエリアのリンクアイテム */
+#favorites-list li {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+#favorites-list li:hover {
+    border-color: #a5b4fc;
+    transform: scale(1.02);
+}
+
+
+/* ===== ドラッグ＆ドロップの視覚効果 ===== */
+
+/* ドラッグ中のアイテム */
+.dragging {
+    opacity: 0.4;
+    background: #e0e7ff;
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ドロップ先のリストがホバーされている状態 */
+ul.drag-over {
+    background-color: rgba(59, 130, 246, 0.05);
+    outline: 2px dashed rgba(59, 130, 246, 0.4);
+    outline-offset: 4px;
     border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color var(--transition-speed);
-}
-.clear-button:hover {
-    background-color: #c82333;
 }
 
-/* === フッター === */
-.site-footer {
-    text-align: center;
-    padding: 2rem;
-    margin-top: 2rem;
-    color: var(--secondary-text-color);
-    font-size: 0.9rem;
+/* お気に入りエリアのドロップゾーン */
+#favorites-dropzone {
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* === アニメーション === */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+#favorites-dropzone.drag-over {
+    background-color: #e0f2fe; /* 明るい水色 */
+    border-color: #38bdf8; /* 濃い水色 */
 }
 
-/* === レスポンシブ対応 === */
-@media (max-width: 1200px) {
-    .main-container {
-        flex-direction: column;
-    }
-    .quick-links {
-        position: static; /* スティッキー解除 */
-        width: 100%;
-    }
+/* お気に入りエリアのプレースホルダー */
+#favorites-placeholder {
+    transition: opacity 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .header-top {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .header-widgets {
-        flex-direction: column;
-        width: 100%;
-    }
-    .main-container {
-        padding: 1rem;
-    }
-    .grid-container {
-        grid-template-columns: 1fr; /* 1カラムに */
-    }
+/* ===== Quickエリアの削除ボタン ===== */
+.fa-trash-alt {
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.fa-trash-alt:hover {
+    background-color: #fee2e2; /* 薄い赤 */
+    color: #ef4444; /* 赤 */
 }
