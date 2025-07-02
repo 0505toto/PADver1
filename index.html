@@ -1,110 +1,92 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>経理部ポータル</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>経理ポータルサイト</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>経理ポータルサイト</h1>
+    <div class="quick-area" id="quick-area">
+      <!-- よく使うリンクをドラッグ可能にするエリア -->
+    </div>
+  </header>
 
-    <header class="site-header">
-        <div id="particles-js"></div>
-        <div class="header-content">
-            <h1><i class="fa-solid fa-landmark"></i> 経理部ポータル</h1>
-            <p>業務に必要な情報やツールをまとめました。</p>
-        </div>
-    </header>
+  <section id="top-section">
+    <h2>■ よく使うもの</h2>
+    <div class="item">
+      <p><strong>大阪の天気予報：</strong><span id="weather">（表示予定）</span></p>
+      <p><strong>Google検索：</strong>
+        <form target="_blank" action="https://www.google.com/search">
+          <input type="text" name="q" placeholder="Google検索">
+          <button type="submit">検索</button>
+        </form>
+      </p>
+      <p><a href="https://ini5a.kinjirou-asp.jp/PLNT1701/KinjirouWeb/kinjirou/kwtop/kwtop.aspx?type=20005" target="_blank">勤怠システム（勤次郎）</a></p>
+    </div>
+  </section>
 
-    <div class="main-wrapper"> <main class="container">
+  <section id="schedule-section">
+    <h2>■ Schedule関連</h2>
+    <ul>
+      <li><a href="#">年間業務一覧（自作ページ予定）</a></li>
+      <li><a href="https://outlook.office.com/calendar/view/month" target="_blank">日常業務スケジュール（Outlook）</a></li>
+    </ul>
+  </section>
 
-            <section id="schedule">
-                <h2><i class="fa-solid fa-calendar-days"></i> Schedule</h2>
-                <div class="card-grid">
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-calendar-week card-icon"></i><h3>年間業務</h3><p>年間の業務スケジュールを確認します。</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-regular fa-calendar card-icon"></i><h3>日常業務</h3><p>個人のOutlookカレンダーを開きます。</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-list-check card-icon"></i><h3>部内突発タスク</h3><p>部内で発生したタスクを管理します。</p></a>
-                </div>
-            </section>
-            
-            <section id="accounting-links">
-                <h2><i class="fa-solid fa-calculator"></i> 経理部専用ツール</h2>
-                <div class="card-grid-small">
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-tree card-icon-small"></i><h4>Moneytree</h4><p>各銀行の入出金管理</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-file-invoice-dollar card-icon-small"></i><h4>Bill One</h4><p>請求書管理</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-file-signature card-icon-small"></i><h4>MakeLeaps</h4><p>請求書・注文請書作成</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-train-subway card-icon-small"></i><h4>楽楽精算</h4><p>経費・交通費精算</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-address-book card-icon-small"></i><h4>経理住所録Hub</h4><p>取引先等の住所録</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-building-columns card-icon-small"></i><h4>SPC NetBanking</h4><p>SPC関連の銀行サイト</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-gears card-icon-small"></i><h4>A-saas</h4><p>SPC会計ソフト</p></a>
-                </div>
-            </section>
+  <section id="common-links">
+    <h2>■ 社内でよく使うリンク</h2>
+    <ul>
+      <li><a href="https://hz6n32v7pq52.cybozu.com/g/" target="_blank">社内ポータルサイト（現行）</a></li>
+      <li><a href="http://pweb/plantec_main/top.php" target="_blank">旧社内ポータルサイト</a></li>
+      <li><a href="https://plantec.media.ourly.jp/" target="_blank">Plantec News</a></li>
+      <li><a href="https://www.fukuri.jp/fkr/apps/log/AASC10111.cfm?action=login" target="_blank">福利厚生（RELO CLUB）</a></li>
+    </ul>
+  </section>
 
-            <section id="company-links">
-                <h2><i class="fa-solid fa-building"></i> 社内共通リンク</h2>
-                <div class="card-grid-small">
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-cloud card-icon-small"></i><h4>Garoon</h4><p>社内ポータル</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-server card-icon-small"></i><h4>旧ポータル</h4><p>旧社内ポータルサイト</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-newspaper card-icon-small"></i><h4>PlantecNews</h4><p>社内ニュースサイト</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-gift card-icon-small"></i><h4>RELO CLUB</h4><p>福利厚生クラブ</p></a>
-                    <a href="..." target="_blank" rel="noopener noreferrer" class="card" draggable="true"><i class="fa-solid fa-shapes card-icon-small"></i><h4>Kintone</h4><p>アプリ作成</p></a>
-                </div>
-            </section>
+  <section id="keiri-links">
+    <h2>■ 経理部門内でよく使うリンク</h2>
+    <ul>
+      <li><a href="https://business.getmoneytree.com/landing" target="_blank">Moneytree Business</a></li>
+      <li><a href="https://plantec-kk.app.bill-one.com/recipient/accounting/invoices" target="_blank">Billone</a></li>
+      <li><a href="https://app.makeleaps.com/home/" target="_blank">MakeLeaps</a></li>
+      <li><a href="https://hz6n32v7pq52.cybozu.com/k/#/portal" target="_blank">Kintone</a></li>
+      <li><a href="https://rsphoto.rakurakuseisan.jp/yCiwuzXNzTa/" target="_blank">楽楽精算</a></li>
+      <li><a href="https://hz6n32v7pq52.cybozu.com/k/167/" target="_blank">経理住所録Hub</a></li>
+      <li><a href="https://0505toto.github.io/NetBankingportal/" target="_blank">SPC NetBankingサイト</a></li>
+      <li><a href="https://menu.a-saas.jp/" target="_blank">A-saas</a></li>
+    </ul>
+  </section>
 
-        </main>
+  <section id="bank-links">
+    <h2>■ 銀行系リンク</h2>
+    <ul>
+      <li><a href="https://corporate.bk.mufg.jp/frontend/auth" target="_blank">メイン銀行（UFJ）</a></li>
+      <li><a href="https://www.b-direct.resonabank.co.jp/0010c/oauth/auth?response_type=code&client_id=OPRS0010..." target="_blank">サブ銀行（りそな）</a></li>
+    </ul>
+  </section>
 
-        <aside id="quick-area">
+  <section id="ai-links">
+    <h2>■ AIチャット</h2>
+    <ul>
+      <li><a href="https://chatgpt.com/" target="_blank">ChatGPT</a></li>
+      <li><a href="https://gemini.google.com/app?hl=ja" target="_blank">Gemini</a></li>
+    </ul>
+  </section>
 
-            <section id="widgets" class="widget-section">
-                <div id="weather-widget" class="card">
-                    <div class="card-header">
-                        <h3><i class="fa-solid fa-sun"></i> 大阪の天気</h3>
-                    </div>
-                    <div id="weather-info" class="card-content">
-                        <p>読み込み中...</p>
-                    </div>
-                </div>
-                <div id="search-widget" class="card">
-                     <div class="card-header">
-                        <h3><i class="fa-brands fa-google"></i> Google検索</h3>
-                    </div>
-                    <div class="card-content">
-                        <form id="google-search-form" action="https://www.google.com/search" method="get" target="_blank">
-                            <input type="text" name="q" placeholder="検索キーワードを入力" required>
-                            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
-                    </div>
-                </div>
-                <a href="..." target="_blank" rel="noopener noreferrer" class="card">
-                    <i class="fa-solid fa-user-clock card-icon"></i>
-                    <h3>勤次郎</h3>
-                    <p>勤怠管理システム</p>
-                </a>
-            </section>
+  <section id="other-links">
+    <h2>■ その他予定リンク</h2>
+    <ul>
+      <li><a href="#">社員内線一覧表（予定）</a></li>
+      <li><a href="#">便利サイト一覧（予定）</a></li>
+    </ul>
+  </section>
 
-            <section id="favorites">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-star"></i> お気に入り</h2>
-                    <button id="add-favorite-btn" class="button-add" title="お気に入りを追加">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-                <div id="favorites-list" class="card-grid-small">
-                    </div>
-            </section>
+  <footer>
+    <p>© 2025 Plantec Keiri Portal</p>
+  </footer>
 
-        </aside>
-        
-    </div> <footer class="site-footer">
-        <p>&copy; 2025 経理部ポータル</p>
-    </footer>
-
-    <div id="favorite-modal" class="modal">
-        </div>
-
-    <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
+  <script src="script.js"></script>
 </body>
 </html>
